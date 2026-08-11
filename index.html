@@ -1,0 +1,603 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encontra tu aula | Entrevista de Ingreso</title>
+<style>
+  :root {
+    --color-primary: #4C9DB0;
+    --color-primary-dark: #3A7A89;
+    --color-accent: #FFEBAF;
+    --color-accent-dark: #D9B860;
+    --color-bg: #FFF8E9;
+    --color-card: #ffffff;
+    --color-text: #1c2333;
+    --color-text-muted: #5b6472;
+    --color-error: #c0392b;
+    --color-error-bg: #fdecea;
+    --color-success-bg: #EAF6F8;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(76, 157, 176, 0.18);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(160deg, var(--color-bg) 0%, #EAF3F5 100%);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .brand {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .brand .logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .brand h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: var(--color-primary-dark);
+  }
+
+  .brand p.subtitle {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .card {
+    background: var(--color-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px 28px;
+  }
+
+  .welcome-msg {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-text);
+    text-align: center;
+    margin: 0 0 24px;
+  }
+
+  .field-group {
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+
+  #legajoInput {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: 2px solid #e4dcc4;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    text-align: center;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+  }
+
+  #legajoInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(76, 157, 176, 0.15);
+  }
+
+  #legajoInput.invalid {
+    border-color: var(--color-error);
+  }
+
+  .hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  button#consultarBtn {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  button#consultarBtn:hover {
+    background: var(--color-primary-dark);
+  }
+
+  button#consultarBtn:active {
+    transform: scale(0.98);
+  }
+
+  button#consultarBtn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  .result-box.loading {
+    background: var(--color-bg);
+    border: 1px solid #e4dcc4;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  #resultado {
+    margin-top: 22px;
+  }
+
+  .result-box {
+    border-radius: 12px;
+    padding: 20px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .result-box.success {
+    background: var(--color-success-bg);
+    border: 1px solid #bfe0e6;
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--color-primary-dark);
+  }
+
+  .result-header .check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-primary-dark);
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .result-box.error {
+    background: var(--color-error-bg);
+    border: 1px solid #f2b8b0;
+    color: var(--color-error);
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .result-name {
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .result-name .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .result-name .value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+
+  .result-edificio {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .result-edificio strong {
+    color: var(--color-primary-dark);
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .result-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .result-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .result-item .value {
+    font-size: clamp(18px, 6vw, 26px);
+    font-weight: 800;
+    color: var(--color-primary-dark);
+    white-space: nowrap;
+  }
+
+  .instructions {
+    background: rgba(255, 235, 175, 0.55);
+    border: 1px dashed var(--color-accent-dark);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .instructions-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 8px;
+  }
+
+  .instructions-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .instructions-list li {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .instructions-list li .bullet {
+    flex-shrink: 0;
+  }
+
+  .instructions-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 400px) {
+    .card { padding: 24px 16px; }
+    .result-grid { gap: 8px; }
+    .result-item { padding: 12px 6px; }
+  }
+
+  @media (max-width: 340px) {
+    .brand h1 { font-size: 19px; }
+    .welcome-msg { font-size: 14px; }
+  }
+</style>
+
+<div class="app">
+  <div class="brand">
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <h1>Encontra tu aula</h1>
+    <p class="subtitle">Entrevista de Ingreso</p>
+  </div>
+
+  <div class="card">
+    <p class="welcome-msg">
+      Ingresa tu número de legajo para saber el aula en la cual tendrás tu entrevista.
+    </p>
+
+    <div class="field-group">
+      <label for="legajoInput">Número de legajo</label>
+      <input
+        type="text"
+        id="legajoInput"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="Ej: 123456"
+        maxlength="7"
+      />
+    </div>
+
+    <button id="consultarBtn">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Consultar aula
+    </button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <footer>UADE · Departamento de Ingreso</footer>
+</div>
+
+<script>
+  // ---------------------------------------------------------------------
+  // CONFIGURACIÓN: mismo Google Sheet que "Encontra tu aula", pero leyendo
+  // la pestaña "ENTREVISTAS" por NOMBRE (no por gid). El endpoint gviz
+  // acepta &sheet=<nombre de la pestaña>, así que no se rompe si el Sheet
+  // se reimporta y Google le asigna un gid nuevo a la pestaña. La hoja
+  // debe tener 4 columnas con estos encabezados exactos en la fila 1:
+  // Legajo | Piso | Aula | Nombre
+  //
+  // Requisito de permisos (igual que el sistema original): el Sheet debe
+  // estar compartido como "Cualquier persona con el enlace - Lector".
+  // ---------------------------------------------------------------------
+  const SHEET_ID = "1HFjfXOpvQafRl2Jnq-bihAXzbK-RnxkGphu52jE0C7M";
+  const SHEET_NAME = "ENTREVISTAS";
+  const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+  const PUNTOS_INSTRUCCIONES = [
+    "La entrevista se realiza en el edificio UADE Labs.",
+    "Al llegar, podrás utilizar las escaleras o los ascensores para dirigirte al aula.",
+    "Recordá tener instalada la aplicación de UADE en tu celular, ya que necesitarás el código QR para ingresar al edificio.",
+    "Te recomendamos llegar con anticipación para realizar el ingreso y dirigirte al aula con tiempo.",
+  ];
+
+  const MIN_DIGITOS = 1;
+  const MAX_DIGITOS = 7;
+
+  const legajoInput = document.getElementById("legajoInput");
+  const consultarBtn = document.getElementById("consultarBtn");
+  const resultadoDiv = document.getElementById("resultado");
+
+  legajoInput.addEventListener("input", () => {
+    const soloNumeros = legajoInput.value.replace(/\D/g, "").slice(0, MAX_DIGITOS);
+    legajoInput.value = soloNumeros;
+    legajoInput.classList.remove("invalid");
+  });
+
+  legajoInput.addEventListener("keypress", (evento) => {
+    if (!/[0-9]/.test(evento.key)) {
+      evento.preventDefault();
+    }
+  });
+
+  legajoInput.addEventListener("keydown", (evento) => {
+    if (evento.key === "Enter") {
+      consultarBtn.click();
+    }
+  });
+
+  consultarBtn.addEventListener("click", consultarAula);
+
+  async function consultarAula() {
+    const legajoStr = legajoInput.value.trim();
+
+    if (!esLegajoValido(legajoStr)) {
+      legajoInput.classList.add("invalid");
+      mostrarError("Ingresa un legajo válido: solo números, entre 1 y 7 dígitos.");
+      return;
+    }
+
+    legajoInput.classList.remove("invalid");
+    mostrarCargando();
+    consultarBtn.disabled = true;
+
+    try {
+      const asignaciones = await obtenerAsignaciones();
+      const asignacion = asignaciones.get(legajoStr);
+
+      if (!asignacion) {
+        mostrarError("No se encontró tu número de legajo. Verificá que sea el correcto o, en caso de no conocerlo, conectate con el sector de Ingreso.");
+      } else {
+        mostrarResultado(asignacion);
+      }
+    } catch (error) {
+      mostrarError("No se pudo conectar con el listado de aulas. Intenta nuevamente en unos segundos.");
+    } finally {
+      consultarBtn.disabled = false;
+    }
+  }
+
+  function esLegajoValido(valor) {
+    if (valor.length < MIN_DIGITOS || valor.length > MAX_DIGITOS) return false;
+    return /^[0-9]+$/.test(valor);
+  }
+
+  // ---------------------------------------------------------------------
+  // LÓGICA DE ASIGNACIÓN
+  // Se vuelve a pedir el CSV en cada consulta (sin cachear) porque el
+  // sistema puede quedar abierto horas mientras se sigue completando la
+  // pestaña ENTREVISTAS del Sheet.
+  // ---------------------------------------------------------------------
+  async function obtenerAsignaciones() {
+    const respuesta = await fetch(SHEET_CSV_URL, { cache: "no-store" });
+    if (!respuesta.ok) throw new Error("No se pudo descargar el CSV");
+
+    const textoCsv = await respuesta.text();
+    const filas = parsearCsv(textoCsv);
+
+    const mapa = new Map();
+    for (let i = 1; i < filas.length; i++) {
+      const [legajo, piso, aula, nombre] = filas[i];
+      if (!legajo) continue;
+      mapa.set(legajo.trim(), {
+        piso: (piso || "").trim(),
+        aula: (aula || "").trim(),
+        nombre: (nombre || "").trim(),
+      });
+    }
+    return mapa;
+  }
+
+  function parsearCsv(texto) {
+    const filas = [];
+    let fila = [];
+    let valor = "";
+    let entreComillas = false;
+
+    for (let i = 0; i < texto.length; i++) {
+      const char = texto[i];
+
+      if (entreComillas) {
+        if (char === '"' && texto[i + 1] === '"') {
+          valor += '"';
+          i++;
+        } else if (char === '"') {
+          entreComillas = false;
+        } else {
+          valor += char;
+        }
+      } else if (char === '"') {
+        entreComillas = true;
+      } else if (char === ",") {
+        fila.push(valor);
+        valor = "";
+      } else if (char === "\n" || char === "\r") {
+        if (char === "\r" && texto[i + 1] === "\n") i++;
+        fila.push(valor);
+        filas.push(fila);
+        fila = [];
+        valor = "";
+      } else {
+        valor += char;
+      }
+    }
+    if (valor !== "" || fila.length > 0) {
+      fila.push(valor);
+      filas.push(fila);
+    }
+    return filas;
+  }
+
+  function mostrarCargando() {
+    resultadoDiv.innerHTML = `<div class="result-box loading">Buscando tu aula...</div>`;
+  }
+
+  function formatearPiso(aula) {
+    return `${aula.charAt(0)}° piso`;
+  }
+
+  function escapeHtml(texto) {
+    return String(texto).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function mostrarResultado(asignacion) {
+    const piso = escapeHtml(formatearPiso(asignacion.aula));
+    const aula = escapeHtml(asignacion.aula);
+    const nombre = escapeHtml(asignacion.nombre || "");
+
+    const bloqueNombre = nombre
+      ? `
+        <div class="result-name">
+          <div class="label">Nombre del alumno</div>
+          <div class="value">${nombre}</div>
+        </div>
+      `
+      : "";
+
+    resultadoDiv.innerHTML = `
+      <div class="result-box success">
+        <div class="result-header">
+          <span class="check">&#10003;</span>
+          Aula asignada
+        </div>
+        ${bloqueNombre}
+        <div class="result-edificio">Edificio: <strong>UADE Labs</strong></div>
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="label">Piso</div>
+            <div class="value">${piso}</div>
+          </div>
+          <div class="result-item">
+            <div class="label">Aula</div>
+            <div class="value">${aula}</div>
+          </div>
+        </div>
+        <div class="instructions">
+          <p class="instructions-title">📋 Información importante a tener en cuenta</p>
+          <ul class="instructions-list">
+            ${PUNTOS_INSTRUCCIONES.map((punto) => `<li><span class="bullet">🟠</span><span>${punto}</span></li>`).join("")}
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  function mostrarError(mensaje) {
+    resultadoDiv.innerHTML = `
+      <div class="result-box error">${mensaje}</div>
+    `;
+  }
+</script>
