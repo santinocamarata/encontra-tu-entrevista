@@ -368,62 +368,6 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
 
-  .step-photo {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    object-fit: cover;
-  }
-
-  .map-steps {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .map-steps li {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    margin-bottom: 10px;
-  }
-
-  .map-steps li:last-child {
-    margin-bottom: 0;
-  }
-
-  .map-steps .step-num {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--color-primary);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1px;
-  }
-
-  .map-steps .step-text {
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  .map-steps .step-text strong {
-    display: block;
-    color: var(--color-text);
-    font-weight: 700;
-    margin-bottom: 2px;
-  }
-
-  .map-steps .step-text span {
-    color: var(--color-text-muted);
-  }
-
   .instructions {
     background: rgba(255, 235, 175, 0.55);
     border: 1px dashed var(--color-accent-dark);
@@ -546,24 +490,6 @@
   const SHEET_NAME = "ENTREVISTAS";
   const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
-  const PASOS_RECORRIDO = [
-    {
-      titulo: "Salís de UADE Labs",
-      texto: "Al salir vas a tener el patio central justo enfrente, a cielo abierto.",
-      foto: "assets/entrada-uade-labs.jpg",
-    },
-    {
-      titulo: "Cruzás el patio en diagonal",
-      texto: "Atravesás las mesas y los canteros hacia el sector opuesto, del lado de Lima.",
-      foto: "assets/patio-central.jpg",
-    },
-    {
-      titulo: "Llegás a Lima 3",
-      texto: "Del lado de Lima, entrás al edificio marcado L3 en el mapa.",
-      foto: null,
-    },
-  ];
-
   // Mapa real del campus UADE + recorrido, extraído del artifact de Claude
   // Design que armó el usuario ("Guía de navegación · UADE"). Las fotos
   // viven en assets/ para no inflar este archivo con base64.
@@ -577,6 +503,15 @@
         <circle cx="330" cy="493" r="2.5" fill="var(--color-primary-dark)"/>
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)"/>
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)" class="map-pulse"/>
+        <g stroke="black" stroke-width="4" stroke-linecap="round" fill="none" transform="scale(1.6)">
+          <circle cx="0" cy="-14" r="4" fill="black" stroke="none"/>
+          <line x1="0" y1="-10" x2="0" y2="0"/>
+          <line x1="0" y1="0" x2="-5" y2="9"/>
+          <line x1="0" y1="0" x2="6" y2="8"/>
+          <line x1="0" y1="-7" x2="-6" y2="-2"/>
+          <line x1="0" y1="-7" x2="6" y2="-3"/>
+          <animateMotion dur="10s" repeatCount="indefinite" path="M 308 168 L 345 210 L 345 470 L 330 493"/>
+        </g>
       </svg>
       <div class="map-label map-label-start" style="left:calc(308/831*100%);top:calc(168/805*100%);">Estás acá</div>
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
@@ -768,14 +703,6 @@
           <p class="map-title">🗺️ Cómo llegar</p>
           <p class="map-subtitle">Parado en la entrada de UADE Labs, cruzá el patio central en diagonal hasta llegar a Lima 3, del otro lado del campus.</p>
           ${MAPA_HTML}
-          <ul class="map-steps">
-            ${PASOS_RECORRIDO.map((paso, i) => `
-              <li>
-                ${paso.foto ? `<img class="step-photo" src="${paso.foto}" alt="${paso.titulo}"/>` : `<span class="step-num">${i + 1}</span>`}
-                <span class="step-text"><strong>${i + 1}. ${paso.titulo}</strong><span>${paso.texto}</span></span>
-              </li>
-            `).join("")}
-          </ul>
         </div>
         <div class="instructions">
           <p class="instructions-title">📋 Información importante a tener en cuenta</p>
