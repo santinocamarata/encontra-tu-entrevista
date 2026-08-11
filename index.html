@@ -370,46 +370,6 @@
     padding: 2px 6px;
   }
 
-  .instructions {
-    background: rgba(255, 235, 175, 0.55);
-    border: 1px dashed var(--color-accent-dark);
-    border-radius: 8px;
-    padding: 12px 14px;
-  }
-
-  .instructions-title {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #000000;
-    margin-bottom: 8px;
-  }
-
-  .instructions-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--color-text-muted);
-  }
-
-  .instructions-list li {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 4px;
-  }
-
-  .instructions-list li .bullet {
-    flex-shrink: 0;
-  }
-
-  .instructions-list li:last-child {
-    margin-bottom: 0;
-  }
-
   footer {
     text-align: center;
     margin-top: 20px;
@@ -520,13 +480,6 @@
       <div class="map-label map-label-elev" style="left:calc(256/831*100%);top:calc(553/805*100%);">Ascensores</div>
     </div>
   `;
-
-  const PUNTOS_INSTRUCCIONES = [
-    "Ahora debes realizar la entrevista de admisión.",
-    "Debes bajar a la planta baja y dirigirte al patio luego ingresas a Lima 3.",
-    "Al llegar al 2° piso deberás guardar en la sala de espera a ser llamado para realizar la entrevista.",
-    "Todos tienen el mismo aula asignada para realizar la entrevista.",
-  ];
 
   const MIN_DIGITOS = 1;
   const MAX_DIGITOS = 7;
@@ -705,12 +658,6 @@
           <p class="map-title">🗺️ Cómo llegar</p>
           <p class="map-subtitle">Parado en la entrada de UADE Labs, cruzá el patio central en diagonal hasta llegar a Lima 3, del otro lado del campus.</p>
           ${MAPA_HTML}
-        </div>
-        <div class="instructions">
-          <p class="instructions-title">📋 Información importante a tener en cuenta</p>
-          <ul class="instructions-list">
-            ${PUNTOS_INSTRUCCIONES.map((punto) => `<li><span class="bullet">🟠</span><span>${punto}</span></li>`).join("")}
-          </ul>
         </div>
       </div>
     `;
