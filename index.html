@@ -309,11 +309,71 @@
     line-height: 1.5;
   }
 
-  .map-diagram {
+  .map-photo-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 1px solid #e4e9ea;
+  }
+
+  .map-photo {
+    display: block;
     width: 100%;
     height: auto;
-    display: block;
-    margin-bottom: 12px;
+  }
+
+  .map-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .map-pulse {
+    transform-origin: 308px 168px;
+    animation: mapPulse 2s ease-out infinite;
+  }
+
+  @keyframes mapPulse {
+    0% { transform: scale(1); opacity: 1; }
+    70% { transform: scale(2.4); opacity: 0; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+
+  .map-label {
+    position: absolute;
+    transform: translate(-50%, -220%);
+    background: var(--color-primary-dark);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .map-label-end {
+    transform: translate(-50%, 55%);
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .map-label-elev {
+    transform: translate(-50%, 60%);
+    background: #fff;
+    color: var(--color-text);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  .step-photo {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
   }
 
   .map-steps {
@@ -490,47 +550,38 @@
     {
       titulo: "Salís de UADE Labs",
       texto: "Al salir vas a tener el patio central justo enfrente, a cielo abierto.",
+      foto: "assets/entrada-uade-labs.jpg",
     },
     {
       titulo: "Cruzás el patio en diagonal",
       texto: "Atravesás las mesas y los canteros hacia el sector opuesto, del lado de Lima.",
+      foto: "assets/patio-central.jpg",
     },
     {
       titulo: "Llegás a Lima 3",
       texto: "Del lado de Lima, entrás al edificio marcado L3 en el mapa.",
+      foto: null,
     },
   ];
 
-  const MAPA_SVG = `
-    <svg class="map-diagram" viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa del recorrido desde UADE Labs hasta Lima 3">
-      <defs>
-        <marker id="flecha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="var(--color-primary-dark)"/>
-        </marker>
-      </defs>
-
-      <rect x="120" y="30" width="150" height="130" rx="10" fill="rgba(255,235,175,0.35)" stroke="var(--color-accent-dark)" stroke-width="1.5" stroke-dasharray="4 4"/>
-      <circle cx="160" cy="70" r="6" fill="#fff" stroke="var(--color-accent-dark)" stroke-width="1.5"/>
-      <circle cx="195" cy="95" r="6" fill="#fff" stroke="var(--color-accent-dark)" stroke-width="1.5"/>
-      <circle cx="230" cy="60" r="6" fill="#fff" stroke="var(--color-accent-dark)" stroke-width="1.5"/>
-      <circle cx="175" cy="130" r="6" fill="#fff" stroke="var(--color-accent-dark)" stroke-width="1.5"/>
-      <text x="195" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="var(--color-text-muted)">PATIO CENTRAL</text>
-
-      <rect x="10" y="55" width="95" height="80" rx="8" fill="var(--color-success-bg)" stroke="var(--color-primary-dark)" stroke-width="1.5"/>
-      <text x="57" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-primary-dark)">UADE</text>
-      <text x="57" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="var(--color-primary-dark)">Labs</text>
-
-      <rect x="285" y="20" width="85" height="100" rx="8" fill="var(--color-primary)" stroke="var(--color-primary-dark)" stroke-width="1.5"/>
-      <text x="327" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Lima 3</text>
-      <text x="327" y="78" text-anchor="middle" font-size="9" fill="#fff">Ascensores</text>
-
-      <circle cx="105" cy="120" r="5" fill="var(--color-primary-dark)"/>
-      <text x="105" y="145" text-anchor="middle" font-size="10" font-weight="700" fill="var(--color-primary-dark)">Estás acá</text>
-
-      <path d="M110,118 L280,55" fill="none" stroke="var(--color-primary-dark)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#flecha)"/>
-
-      <text x="327" y="135" text-anchor="middle" font-size="10" font-weight="700" fill="var(--color-primary-dark)">Entrada Lima 3</text>
-    </svg>
+  // Mapa real del campus UADE + recorrido, extraído del artifact de Claude
+  // Design que armó el usuario ("Guía de navegación · UADE"). Las fotos
+  // viven en assets/ para no inflar este archivo con base64.
+  const MAPA_HTML = `
+    <div class="map-photo-wrap">
+      <img src="assets/mapa-campus.jpg" alt="Mapa del campus UADE" class="map-photo"/>
+      <svg class="map-overlay" viewBox="0 0 831 805" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 308 168 L 345 210 L 345 470 L 330 493 L 330 553 L 256 553" fill="none" stroke="var(--color-primary-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 18"/>
+        <polygon points="256,553 272,543 272,562" fill="var(--color-primary-dark)"/>
+        <circle cx="330" cy="493" r="7" fill="white" stroke="var(--color-primary-dark)" stroke-width="2.5"/>
+        <circle cx="330" cy="493" r="2.5" fill="var(--color-primary-dark)"/>
+        <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)"/>
+        <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)" class="map-pulse"/>
+      </svg>
+      <div class="map-label map-label-start" style="left:calc(308/831*100%);top:calc(168/805*100%);">Estás acá</div>
+      <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
+      <div class="map-label map-label-elev" style="left:calc(256/831*100%);top:calc(553/805*100%);">Ascensores</div>
+    </div>
   `;
 
   const PUNTOS_INSTRUCCIONES = [
@@ -716,12 +767,12 @@
         <div class="map-section">
           <p class="map-title">🗺️ Cómo llegar</p>
           <p class="map-subtitle">Parado en la entrada de UADE Labs, cruzá el patio central en diagonal hasta llegar a Lima 3, del otro lado del campus.</p>
-          ${MAPA_SVG}
+          ${MAPA_HTML}
           <ul class="map-steps">
             ${PASOS_RECORRIDO.map((paso, i) => `
               <li>
-                <span class="step-num">${i + 1}</span>
-                <span class="step-text"><strong>${paso.titulo}</strong><span>${paso.texto}</span></span>
+                ${paso.foto ? `<img class="step-photo" src="${paso.foto}" alt="${paso.titulo}"/>` : `<span class="step-num">${i + 1}</span>`}
+                <span class="step-text"><strong>${i + 1}. ${paso.titulo}</strong><span>${paso.texto}</span></span>
               </li>
             `).join("")}
           </ul>
