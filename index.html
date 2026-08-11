@@ -41,39 +41,43 @@
 
   .brand {
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 24px;
+    transition: margin 0.2s ease;
   }
 
   .brand .logo {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 13px;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
     background: var(--color-primary);
     color: #fff;
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     box-shadow: var(--shadow);
+    transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease;
   }
 
   .brand .logo svg {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
+    transition: width 0.2s ease, height 0.2s ease;
   }
 
   .brand h1 {
     margin: 0;
-    font-size: 18px;
+    font-size: 22px;
     letter-spacing: 0.5px;
     color: var(--color-primary-dark);
+    transition: font-size 0.2s ease;
   }
 
   .brand p.subtitle {
-    margin: 2px 0 0;
-    font-size: 11px;
+    margin: 4px 0 0;
+    font-size: 13px;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -83,33 +87,36 @@
     background: var(--color-card);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 22px 24px;
+    padding: 32px 28px;
+    transition: padding 0.2s ease;
   }
 
   .welcome-msg {
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.5;
     color: var(--color-text);
     text-align: center;
-    margin: 0 0 14px;
+    margin: 0 0 24px;
+    transition: font-size 0.2s ease, margin 0.2s ease;
   }
 
   .field-group {
-    margin-bottom: 12px;
+    margin-bottom: 18px;
+    transition: margin 0.2s ease;
   }
 
   label {
     display: block;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--color-text-muted);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
   #legajoInput {
     width: 100%;
-    padding: 10px 14px;
-    font-size: 16px;
+    padding: 14px 16px;
+    font-size: 18px;
     letter-spacing: 1px;
     border: 2px solid #e4dcc4;
     border-radius: 10px;
@@ -118,6 +125,42 @@
     text-align: center;
     font-weight: 600;
     color: var(--color-primary-dark);
+  }
+
+  /* Estado compacto: se activa solo cuando ya hay un resultado en pantalla,
+     para dejarle más lugar al mapa sin achicar la pantalla inicial. */
+  .app.compact .brand {
+    margin-bottom: 10px;
+  }
+
+  .app.compact .brand .logo {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 6px;
+  }
+
+  .app.compact .brand .logo svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .app.compact .brand h1 {
+    font-size: 17px;
+  }
+
+  .app.compact .card {
+    padding: 18px 18px;
+  }
+
+  .app.compact .welcome-msg {
+    font-size: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .app.compact .field-group {
+    margin-bottom: 10px;
   }
 
   #legajoInput:focus {
@@ -137,8 +180,8 @@
 
   button#consultarBtn {
     width: 100%;
-    padding: 11px 16px;
-    font-size: 14px;
+    padding: 14px 16px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.5px;
     color: #fff;
@@ -503,6 +546,7 @@
   const legajoInput = document.getElementById("legajoInput");
   const consultarBtn = document.getElementById("consultarBtn");
   const resultadoDiv = document.getElementById("resultado");
+  const appDiv = document.querySelector(".app");
 
   legajoInput.addEventListener("input", () => {
     const soloNumeros = legajoInput.value.replace(/\D/g, "").slice(0, MAX_DIGITOS);
@@ -639,6 +683,7 @@
   }
 
   function mostrarResultado(asignacion) {
+    appDiv.classList.add("compact");
     const piso = escapeHtml(formatearPiso(asignacion.aula));
     const aula = escapeHtml(asignacion.aula);
     const nombre = escapeHtml(asignacion.nombre || "");
@@ -680,6 +725,7 @@
   }
 
   function mostrarError(mensaje) {
+    appDiv.classList.remove("compact");
     resultadoDiv.innerHTML = `
       <div class="result-box error">${mensaje}</div>
     `;
