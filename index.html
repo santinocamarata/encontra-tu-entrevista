@@ -163,6 +163,74 @@
     margin-bottom: 10px;
   }
 
+  /* El mapa es lo que más importa en el resultado (la mayoría lo ve desde
+     el celular): se estira a todo el ancho de la tarjeta compacta, y el
+     resto de los datos (nombre/piso/aula) se achica para darle lugar. */
+  .app.compact .result-box.success {
+    padding: 14px;
+  }
+
+  .app.compact .result-header {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .app.compact .result-name {
+    padding: 4px 10px;
+    margin-bottom: 8px;
+  }
+
+  .app.compact .result-name .value {
+    font-size: 12px;
+  }
+
+  .app.compact .result-edificio {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .app.compact .result-grid {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .app.compact .result-item {
+    padding: 8px 6px;
+  }
+
+  .app.compact .result-item .value {
+    font-size: clamp(15px, 5vw, 20px);
+  }
+
+  .app.compact .map-section {
+    margin-left: -14px;
+    margin-right: -14px;
+    padding: 10px 14px 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+  }
+
+  .app.compact .map-title {
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  .app.compact .map-subtitle {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
+  .app.compact .map-photo-wrap {
+    margin-left: -14px;
+    margin-right: -14px;
+    width: calc(100% + 28px);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
   #legajoInput:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(76, 157, 176, 0.15);
