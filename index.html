@@ -500,21 +500,51 @@
     border-top: 7px solid var(--color-primary-dark);
   }
 
+  /* "Entrada Lima 3" y "Ascensores" apilados arriba/abajo del punto siempre
+     terminaban pisando el mapa o el texto del edificio. En vez de eso, cada
+     una se corre hacia el costado libre (patio/vereda) con un piquito que
+     apunta al punto exacto, igual que "Estás acá". */
   .map-label-end {
-    transform: translate(-50%, 60%);
+    transform: translate(14px, -50%);
     background: var(--color-primary-dark);
     font-size: 10px;
-    padding: 3px 7px;
+    padding: 4px 8px;
+  }
+
+  .map-label-end::after {
+    content: "";
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 6px solid var(--color-primary-dark);
   }
 
   .map-label-elev {
-    transform: translate(-50%, 0);
+    transform: translate(calc(-100% - 14px), -50%);
     background: #fff;
     color: var(--color-text);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-    font-size: 11px;
-    padding: 4px 9px;
+    font-size: 10px;
+    padding: 4px 8px;
     border-radius: 8px;
+  }
+
+  .map-label-elev::after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 6px solid #fff;
   }
 
   footer {
