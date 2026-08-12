@@ -524,27 +524,16 @@
     border-right: 6px solid var(--color-primary-dark);
   }
 
+  /* Ascensores no señala el punto de entrada: va adentro del cuadrado de
+     L3, indicando dónde están una vez que el alumno ya entró al edificio. */
   .map-label-elev {
-    transform: translate(calc(-100% - 14px), -50%);
+    transform: translate(-50%, -50%);
     background: #fff;
     color: var(--color-text);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     font-size: 10px;
     padding: 4px 8px;
     border-radius: 8px;
-  }
-
-  .map-label-elev::after {
-    content: "";
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 6px solid #fff;
   }
 
   footer {
@@ -675,7 +664,7 @@
         <div class="pico"></div>
       </div>
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
-      <div class="map-label map-label-elev" style="left:calc(330/831*100%);top:calc(493/805*100%);">Ascensores</div>
+      <div class="map-label map-label-elev" style="left:calc(256/831*100%);top:calc(605/805*100%);">Ascensores</div>
     </div>
   `;
 
