@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Encontra tu aula | Entrevista de Ingreso</title>
+<title>Encontrá tu aula | Entrevista de Ingreso</title>
 <style>
   :root {
     --color-primary: #4C9DB0;
@@ -594,13 +594,13 @@
         <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
       </svg>
     </div>
-    <h1>Encontra tu aula</h1>
+    <h1>Encontrá tu aula</h1>
     <p class="subtitle">Entrevista de Ingreso</p>
   </div>
 
   <div class="card">
     <p class="welcome-msg">
-      Ingresa tu número de legajo para saber el aula en la cual tendrás tu entrevista.
+      Ingresá tu número de legajo para saber el aula en la cual tendrás tu entrevista.
     </p>
 
     <div class="field-group">
@@ -631,7 +631,7 @@
 
 <script>
   // ---------------------------------------------------------------------
-  // CONFIGURACIÓN: mismo Google Sheet que "Encontra tu aula", pero leyendo
+  // CONFIGURACIÓN: mismo Google Sheet que "Encontrá tu aula", pero leyendo
   // la pestaña "ENTREVISTAS" por NOMBRE (no por gid). El endpoint gviz
   // acepta &sheet=<nombre de la pestaña>, así que no se rompe si el Sheet
   // se reimporta y Google le asigna un gid nuevo a la pestaña. La hoja
@@ -715,7 +715,7 @@
 
     if (!esLegajoValido(legajoStr)) {
       legajoInput.classList.add("invalid");
-      mostrarError("Ingresa un legajo válido: solo números, entre 1 y 7 dígitos.");
+      mostrarError("Ingresá un legajo válido: solo números, entre 1 y 7 dígitos.");
       return;
     }
 
@@ -734,7 +734,7 @@
         registrarConsulta(legajoStr, asignacion.nombre);
       }
     } catch (error) {
-      mostrarError("No se pudo conectar con el listado de aulas. Intenta nuevamente en unos segundos.");
+      mostrarError("No se pudo conectar con el listado de aulas. Intentá nuevamente en unos segundos.");
     } finally {
       consultarBtn.disabled = false;
     }
