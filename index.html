@@ -511,6 +511,11 @@
   const SHEET_NAME = "ENTREVISTAS";
   const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
+  // Apps Script (ver apps-script/registrar-consulta.gs) que anota en las
+  // columnas E/F/G de ENTREVISTAS quién consultó su aula y cuándo, para
+  // trazabilidad. Se completa después de desplegarlo como Web App.
+  const APPS_SCRIPT_URL = "PENDIENTE_URL_APPS_SCRIPT";
+
   // Mapa real del campus UADE + recorrido, extraído del artifact de Claude
   // Design que armó el usuario ("Guía de navegación · UADE"). Las fotos
   // viven en assets/ para no inflar este archivo con base64.
@@ -589,12 +594,27 @@
         mostrarError("No se encontró tu número de legajo. Verificá que sea el correcto o, en caso de no conocerlo, conectate con el sector de Ingreso.");
       } else {
         mostrarResultado(asignacion);
+        registrarConsulta(legajoStr, asignacion.nombre);
       }
     } catch (error) {
       mostrarError("No se pudo conectar con el listado de aulas. Intenta nuevamente en unos segundos.");
     } finally {
       consultarBtn.disabled = false;
     }
+  }
+
+  // Registra la consulta en el Sheet (columnas E/F/G) para trazabilidad.
+  // Fire-and-forget: si falla, no afecta la experiencia del alumno, que
+  // ya vio su aula. mode "no-cors" evita el preflight y no permite leer
+  // la respuesta, así que no hay nada que esperar ni mostrar.
+  function registrarConsulta(legajo, nombre) {
+    if (APPS_SCRIPT_URL.startsWith("PENDIENTE_")) return;
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ legajo, nombre }),
+    }).catch(() => {});
   }
 
   function esLegajoValido(valor) {
