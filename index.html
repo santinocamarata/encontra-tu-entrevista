@@ -471,14 +471,30 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
+  .map-label-start {
+    transform: translate(-50%, -108%);
+  }
+
+  .map-label-start .pico {
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--color-primary-dark);
+  }
+
   .map-label-end {
-    transform: translate(10px, -50%);
+    transform: translate(6px, -130%);
     font-size: 8px;
     padding: 2px 6px;
   }
 
   .map-label-elev {
-    transform: translate(-50%, -160%);
+    transform: translate(-105%, -130%);
     background: #fff;
     color: var(--color-text);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
@@ -607,7 +623,7 @@
           <animateMotion dur="10s" repeatCount="indefinite" path="M 308 168 L 345 210 L 345 470 L 330 493"/>
         </g>
       </svg>
-      <div class="map-label map-label-start" style="left:calc(308/831*100%);top:calc(168/805*100%);">Estás acá</div>
+      <div class="map-label map-label-start" style="left:calc(308/831*100%);top:calc(168/805*100%);">Estás acá<span class="pico"></span></div>
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
       <div class="map-label map-label-elev" style="left:calc(256/831*100%);top:calc(553/805*100%);">Ascensores</div>
     </div>
