@@ -467,6 +467,71 @@
     height: auto;
   }
 
+  /* Botón para ver el mapa a pantalla completa, y el propio mapa cuando
+     se reubica (vía JS) dentro de #mapLightbox. Al agrandarse, el wrap
+     pasa a "shrink-to-fit" (inline-block) para que su tamaño siga
+     coincidiendo exactamente con el de la imagen: así los pines y
+     etiquetas, que se posicionan en porcentaje sobre el wrap, no se
+     desalinean. */
+  .map-expand-btn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 5;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .map-expand-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .map-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 32, 0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    padding: 24px;
+    animation: fadeIn 0.15s ease-out;
+  }
+
+  .map-lightbox.open {
+    display: flex;
+  }
+
+  .map-photo-wrap.map-fullscreen {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    border: none;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .map-photo-wrap.map-fullscreen .map-photo {
+    width: auto;
+    height: auto;
+    max-width: calc(100vw - 48px);
+    max-height: calc(100vh - 48px);
+  }
+
+  .map-photo-wrap.map-fullscreen .map-expand-btn {
+    display: none;
+  }
+
   .map-overlay {
     position: absolute;
     inset: 0;
@@ -732,6 +797,10 @@
   <img id="photoLightboxImg" src="" alt=""/>
 </div>
 
+<div class="map-lightbox" id="mapLightbox" onclick="if (event.target === this) cerrarMapaCompleto()">
+  <button type="button" class="photo-lightbox-close" onclick="cerrarMapaCompleto()" aria-label="Cerrar mapa">&times;</button>
+</div>
+
 <script>
   // ---------------------------------------------------------------------
   // CONFIGURACIÓN: mismo Google Sheet que "Encontrá tu aula", pero leyendo
@@ -776,15 +845,50 @@
     document.getElementById("photoLightbox").classList.remove("open");
   }
 
+  // El mapa completo no se clona: se reubica el mismo elemento
+  // #mapPhotoWrap adentro de #mapLightbox y, al cerrar, vuelve a su
+  // lugar original en la tarjeta de resultado. Así los pines y el
+  // muñequito animado siguen siendo los mismos, no una copia.
+  let mapWrapPadre = null;
+  let mapWrapSiguiente = null;
+
+  function abrirMapaCompleto() {
+    const wrap = document.getElementById("mapPhotoWrap");
+    const lightbox = document.getElementById("mapLightbox");
+    if (!wrap || !lightbox) return;
+    mapWrapPadre = wrap.parentNode;
+    mapWrapSiguiente = wrap.nextSibling;
+    lightbox.appendChild(wrap);
+    wrap.classList.add("map-fullscreen");
+    lightbox.classList.add("open");
+  }
+
+  function cerrarMapaCompleto() {
+    const wrap = document.getElementById("mapPhotoWrap");
+    const lightbox = document.getElementById("mapLightbox");
+    if (!wrap || !lightbox || !mapWrapPadre) return;
+    wrap.classList.remove("map-fullscreen");
+    mapWrapPadre.insertBefore(wrap, mapWrapSiguiente);
+    lightbox.classList.remove("open");
+  }
+
   document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape") cerrarFoto();
+    if (evento.key === "Escape") {
+      cerrarFoto();
+      cerrarMapaCompleto();
+    }
   });
 
   // Mapa real del campus UADE + recorrido, extraído del artifact de Claude
   // Design que armó el usuario ("Guía de navegación · UADE"). Las fotos
   // viven en assets/ para no inflar este archivo con base64.
   const MAPA_HTML = `
-    <div class="map-photo-wrap">
+    <div class="map-photo-wrap" id="mapPhotoWrap">
+      <button type="button" class="map-expand-btn" onclick="abrirMapaCompleto()" aria-label="Ver mapa completo">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
       <img src="assets/mapa-campus.jpg" alt="Mapa del campus UADE" class="map-photo"/>
       <svg class="map-overlay" viewBox="0 0 831 805" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M 308 168 L 345 210 L 345 470 L 330 493 L 330 553 L 256 553" fill="none" stroke="var(--color-primary-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 18"/>
@@ -793,7 +897,7 @@
         <circle cx="330" cy="493" r="2.5" fill="var(--color-primary-dark)"/>
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)"/>
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)" class="map-pulse"/>
-        <g stroke="black" stroke-width="4" stroke-linecap="round" fill="none" transform="scale(1.8)">
+        <g stroke="black" stroke-width="4" stroke-linecap="round" fill="none" transform="scale(2.4)">
           <circle cx="0" cy="-14" r="4" fill="black" stroke="none"/>
           <line x1="0" y1="-10" x2="0" y2="0"/>
           <line x1="0" y1="0" x2="-5" y2="9"/>
@@ -976,6 +1080,12 @@
   }
 
   function mostrarResultado(asignacion) {
+    // Si el mapa quedó a pantalla completa de una consulta anterior, el
+    // #mapPhotoWrap actual vive reubicado dentro de #mapLightbox. Hay que
+    // sacarlo de ahí antes de pisar resultadoDiv.innerHTML: si no, el
+    // innerHTML crea un #mapPhotoWrap nuevo y queda un id duplicado (el
+    // viejo, flotando en el lightbox).
+    cerrarMapaCompleto();
     appDiv.classList.add("compact");
     const piso = escapeHtml(formatearPiso(asignacion.aula));
     const aula = escapeHtml(asignacion.aula);
