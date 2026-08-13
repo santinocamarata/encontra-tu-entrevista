@@ -553,14 +553,33 @@
   /* El muñequito vive en su propio SVG, aparte del camino/etiquetas, para
      poder pintarlo arriba de los pines de fotos sin que les robe el
      click: pointer-events:none deja pasar el toque directo al botón que
-     está debajo. */
+     está debajo. Es un <div> con animación por CSS (no SVG animateMotion)
+     a propósito: algunos navegadores mobile no respetan bien
+     pointer-events:none en un elemento SVG animado por SMIL mientras se
+     mueve, y el toque se lo terminaba comiendo el muñequito en vez de
+     pasar al pin. Con HTML + @keyframes ese problema no existe. */
   .map-walker {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 18px;
+    height: 33px;
+    transform: translate(-50%, -66%);
     z-index: 4;
     pointer-events: none;
+    animation: mapWalkerMove 10s linear infinite;
+  }
+
+  .map-walker svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  @keyframes mapWalkerMove {
+    0%     { left: calc(308 / 831 * 100%); top: calc(168 / 805 * 100%); }
+    16.3%  { left: calc(345 / 831 * 100%); top: calc(210 / 805 * 100%); }
+    92%    { left: calc(345 / 831 * 100%); top: calc(470 / 805 * 100%); }
+    100%   { left: calc(330 / 831 * 100%); top: calc(493 / 805 * 100%); }
   }
 
   .map-pulse {
@@ -758,6 +777,7 @@
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
     .map-marker { width: 14px; height: 14px; }
+    .map-walker { width: 14px; height: 26px; }
   }
 
   @media (max-width: 340px) {
@@ -934,17 +954,16 @@
           <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
         </svg>
       </button>`).join("")}
-      <svg class="map-walker" viewBox="0 0 831 805" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="black" stroke-width="4" stroke-linecap="round" fill="none" transform="scale(2.4)">
-          <circle cx="0" cy="-14" r="4" fill="black" stroke="none"/>
-          <line x1="0" y1="-10" x2="0" y2="0"/>
-          <line x1="0" y1="0" x2="-5" y2="9"/>
-          <line x1="0" y1="0" x2="6" y2="8"/>
-          <line x1="0" y1="-7" x2="-6" y2="-2"/>
-          <line x1="0" y1="-7" x2="6" y2="-3"/>
-          <animateMotion dur="10s" repeatCount="indefinite" path="M 308 168 L 345 210 L 345 470 L 330 493"/>
-        </g>
-      </svg>
+      <div class="map-walker" aria-hidden="true">
+        <svg viewBox="-8 -19 16 29" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="0" cy="-14" r="4" fill="black"/>
+          <line x1="0" y1="-10" x2="0" y2="0" stroke="black" stroke-width="4" stroke-linecap="round"/>
+          <line x1="0" y1="0" x2="-5" y2="9" stroke="black" stroke-width="4" stroke-linecap="round"/>
+          <line x1="0" y1="0" x2="6" y2="8" stroke="black" stroke-width="4" stroke-linecap="round"/>
+          <line x1="0" y1="-7" x2="-6" y2="-2" stroke="black" stroke-width="4" stroke-linecap="round"/>
+          <line x1="0" y1="-7" x2="6" y2="-3" stroke="black" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
   `;
 
