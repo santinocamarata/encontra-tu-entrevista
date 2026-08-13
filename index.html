@@ -550,6 +550,75 @@
     border-left: 6px solid var(--color-success-bg);
   }
 
+  /* Marcadores numerados sobre el recorrido: tocás uno y se abre la foto
+     real de ese tramo en un lightbox, para que el alumno reconozca el
+     lugar antes de llegar. */
+  .map-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2.5px solid var(--color-primary-dark);
+    color: var(--color-primary-dark);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: inherit;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+
+  .map-marker:active {
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+
+  .photo-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 32, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+    animation: fadeIn 0.15s ease-out;
+  }
+
+  .photo-lightbox.open {
+    display: flex;
+  }
+
+  .photo-lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .photo-lightbox-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   footer {
     text-align: center;
     margin-top: 20px;
@@ -572,6 +641,7 @@
     .map-label-start .pill { font-size: 10px; padding: 4px 10px; }
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
+    .map-marker { width: 18px; height: 18px; font-size: 9px; border-width: 2px; }
   }
 
   @media (max-width: 340px) {
@@ -629,6 +699,11 @@
   <footer>UADE · Departamento de Ingreso</footer>
 </div>
 
+<div class="photo-lightbox" id="photoLightbox" onclick="if (event.target === this) cerrarFoto()">
+  <button type="button" class="photo-lightbox-close" onclick="cerrarFoto()" aria-label="Cerrar foto">&times;</button>
+  <img id="photoLightboxImg" src="" alt=""/>
+</div>
+
 <script>
   // ---------------------------------------------------------------------
   // CONFIGURACIÓN: mismo Google Sheet que "Encontrá tu aula", pero leyendo
@@ -649,6 +724,35 @@
   // columnas E/F/G de ENTREVISTAS quién consultó su aula y cuándo, para
   // trazabilidad. Se completa después de desplegarlo como Web App.
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwReRY09YFkN_-a5nDH1Va_Wqk4H99fRQXZBRZYaSXPhDPzFs5VHHlEX5nt4QAR3Esx/exec";
+
+  // Puntos con foto real del recorrido, en el orden en que se los va a
+  // encontrar el alumno caminando desde UADE Labs hasta el aula. Las
+  // coordenadas siguen el mismo sistema (x,y sobre el viewBox 831x805) que
+  // el path y las etiquetas del mapa.
+  const PUNTOS_FOTO = [
+    { n: 1, x: 327, y: 190, src: "assets/punto-1.jpg", alt: "Salida de UADE Labs" },
+    { n: 2, x: 345, y: 244, src: "assets/punto-2.jpg", alt: "Cruce del patio central" },
+    { n: 3, x: 345, y: 311, src: "assets/punto-3.jpg", alt: "Patio central" },
+    { n: 4, x: 345, y: 371, src: "assets/punto-4.jpg", alt: "Patio central, acercándose a Lima 3" },
+    { n: 5, x: 345, y: 421, src: "assets/punto-5.jpg", alt: "Camino hacia la entrada de Lima 3" },
+    { n: 6, x: 336, y: 478, src: "assets/punto-6.jpg", alt: "Entrada de Lima 3" },
+  ];
+
+  function abrirFoto(src, alt) {
+    const lightbox = document.getElementById("photoLightbox");
+    const img = document.getElementById("photoLightboxImg");
+    img.src = src;
+    img.alt = alt;
+    lightbox.classList.add("open");
+  }
+
+  function cerrarFoto() {
+    document.getElementById("photoLightbox").classList.remove("open");
+  }
+
+  document.addEventListener("keydown", (evento) => {
+    if (evento.key === "Escape") cerrarFoto();
+  });
 
   // Mapa real del campus UADE + recorrido, extraído del artifact de Claude
   // Design que armó el usuario ("Guía de navegación · UADE"). Las fotos
@@ -679,6 +783,8 @@
       </div>
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
       <div class="map-label map-label-elev" style="left:calc(330/831*100%);top:calc(518/805*100%);">Ascensor</div>
+      ${PUNTOS_FOTO.map(p => `
+      <button type="button" class="map-marker" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">${p.n}</button>`).join("")}
     </div>
   `;
 
