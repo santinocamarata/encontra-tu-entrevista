@@ -550,32 +550,32 @@
     border-left: 6px solid var(--color-success-bg);
   }
 
-  /* Marcadores numerados sobre el recorrido: tocás uno y se abre la foto
-     real de ese tramo en un lightbox, para que el alumno reconozca el
-     lugar antes de llegar. */
+  /* Pines sobre el recorrido, corridos afuera de la línea punteada (para no
+     tapar al muñequito ni el camino) pero pegados a ella: tocás uno y se
+     abre la foto real de ese tramo en un lightbox. Mismo ícono que el logo
+     de la marca, para que se lea como "acá hay una ubicación". La punta del
+     pin (abajo-centro) es el punto de anclaje. */
   .map-marker {
     position: absolute;
-    transform: translate(-50%, -50%);
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #fff;
-    border: 2.5px solid var(--color-primary-dark);
-    color: var(--color-primary-dark);
-    font-size: 11px;
-    font-weight: 700;
-    font-family: inherit;
-    line-height: 1;
+    transform: translate(-50%, -100%);
+    width: 18px;
+    height: 18px;
     padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    border: none;
+    background: none;
+    color: var(--color-primary-dark);
     cursor: pointer;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+  }
+
+  .map-marker svg {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .map-marker:active {
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -100%) scale(0.9);
   }
 
   .photo-lightbox {
@@ -641,7 +641,7 @@
     .map-label-start .pill { font-size: 10px; padding: 4px 10px; }
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
-    .map-marker { width: 18px; height: 18px; font-size: 9px; border-width: 2px; }
+    .map-marker { width: 14px; height: 14px; }
   }
 
   @media (max-width: 340px) {
@@ -730,10 +730,10 @@
   // coordenadas siguen el mismo sistema (x,y sobre el viewBox 831x805) que
   // el path y las etiquetas del mapa.
   const PUNTOS_FOTO = [
-    { n: 1, x: 327, y: 190, src: "assets/punto-1.jpg", alt: "Salida de UADE Labs" },
-    { n: 2, x: 345, y: 311, src: "assets/punto-2.jpg", alt: "Patio central" },
-    { n: 3, x: 345, y: 421, src: "assets/punto-3.jpg", alt: "Camino hacia la entrada de Lima 3" },
-    { n: 4, x: 336, y: 478, src: "assets/punto-4.jpg", alt: "Entrada de Lima 3" },
+    { x: 352, y: 195, src: "assets/punto-1.jpg", alt: "Salida de UADE Labs" },
+    { x: 365, y: 311, src: "assets/punto-2.jpg", alt: "Patio central" },
+    { x: 365, y: 421, src: "assets/punto-3.jpg", alt: "Camino hacia la entrada de Lima 3" },
+    { x: 362, y: 468, src: "assets/punto-4.jpg", alt: "Entrada de Lima 3" },
   ];
 
   function abrirFoto(src, alt) {
@@ -782,7 +782,11 @@
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
       <div class="map-label map-label-elev" style="left:calc(330/831*100%);top:calc(518/805*100%);">Ascensor</div>
       ${PUNTOS_FOTO.map(p => `
-      <button type="button" class="map-marker" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">${p.n}</button>`).join("")}
+      <button type="button" class="map-marker" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
+        </svg>
+      </button>`).join("")}
     </div>
   `;
 
