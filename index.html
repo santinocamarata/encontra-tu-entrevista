@@ -279,7 +279,7 @@
   }
 
   button#consultarBtn:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
   }
 
   button#consultarBtn:disabled {
@@ -303,12 +303,18 @@
   .result-box {
     border-radius: 12px;
     padding: 20px;
-    animation: fadeIn 0.25s ease;
   }
 
   .result-box.success {
     background: var(--color-success-bg);
     border: 1px solid #bfe0e6;
+  }
+
+  /* Cada sección del resultado entra por separado (ver mostrarResultado),
+     escalonadas por animation-delay inline. */
+  .reveal {
+    opacity: 0;
+    animation: fadeIn 0.35s ease-out forwards;
   }
 
   .result-header {
@@ -341,6 +347,7 @@
     font-size: 14px;
     text-align: center;
     font-weight: 600;
+    animation: fadeIn 0.3s ease-out;
   }
 
   .result-name {
@@ -458,7 +465,7 @@
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 12px;
-    border: 1px solid #e4e9ea;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
   .map-photo {
@@ -490,6 +497,15 @@
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    transition: transform 0.1s ease-out, background 0.15s ease;
+  }
+
+  .map-expand-btn:hover {
+    background: #fff;
+  }
+
+  .map-expand-btn:active {
+    transform: scale(0.96);
   }
 
   .map-expand-btn svg {
@@ -501,23 +517,29 @@
     position: fixed;
     inset: 0;
     background: rgba(20, 24, 32, 0.92);
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 90;
     padding: 16px;
-    animation: fadeIn 0.15s ease-out;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out, visibility 0s linear 0.18s;
   }
 
   .map-lightbox.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.18s ease-out;
   }
 
   .map-photo-wrap.map-fullscreen {
     display: inline-block;
     width: auto;
     margin: 0;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   }
 
@@ -701,6 +723,7 @@
     color: var(--color-marker-photo);
     cursor: pointer;
     filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+    transition: transform 0.1s ease-out;
   }
 
   .map-marker svg {
@@ -710,23 +733,33 @@
   }
 
   .map-marker:active {
-    transform: translate(-50%, -100%) scale(0.9);
+    transform: translate(-50%, -100%) scale(0.96);
   }
 
+  /* Se muestra/oculta por opacidad (no display) para poder animar también
+     el cierre: un lightbox que solo aparece de golpe y desaparece de
+     golpe se siente tosco. La salida es más sutil que la entrada
+     (escala 0.97 vs 0.96) y ambas usan ease-out. */
   .photo-lightbox {
     position: fixed;
     inset: 0;
     background: rgba(20, 24, 32, 0.85);
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 100;
     padding: 24px;
-    animation: fadeIn 0.15s ease-out;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.18s ease-out, visibility 0s linear 0.18s;
   }
 
   .photo-lightbox.open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.18s ease-out;
   }
 
   .photo-lightbox img {
@@ -734,6 +767,14 @@
     max-height: 85vh;
     border-radius: 10px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    outline: 1px solid rgba(255, 255, 255, 0.1);
+    outline-offset: -1px;
+    transform: scale(0.97);
+    transition: transform 0.18s ease-out;
+  }
+
+  .photo-lightbox.open img {
+    transform: scale(1);
   }
 
   .photo-lightbox-close {
@@ -752,6 +793,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.1s ease-out, background 0.15s ease;
+  }
+
+  .photo-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  .photo-lightbox-close:active {
+    transform: scale(0.96);
   }
 
   footer {
@@ -1138,22 +1188,26 @@
 
     const bloqueNombre = nombre
       ? `
-        <div class="result-name">
+        <div class="result-name reveal" style="animation-delay:60ms">
           <div class="label">Nombre del alumno</div>
           <div class="value">${nombre}</div>
         </div>
       `
       : "";
 
+    // El resultado entra en cascada (header → nombre → edificio → piso/aula
+    // → mapa) en vez de un solo fade parejo: como es una pantalla que el
+    // alumno ve una sola vez por consulta, el orden de aparición ayuda a
+    // guiar la lectura de "qué pasó" a "cómo llego".
     resultadoDiv.innerHTML = `
       <div class="result-box success">
-        <div class="result-header">
+        <div class="result-header reveal" style="animation-delay:0ms">
           <span class="check">&#10003;</span>
           Aula asignada
         </div>
         ${bloqueNombre}
-        <div class="result-edificio">Edificio: <strong>LIMA 3</strong></div>
-        <div class="result-grid">
+        <div class="result-edificio reveal" style="animation-delay:100ms">Edificio: <strong>LIMA 3</strong></div>
+        <div class="result-grid reveal" style="animation-delay:140ms">
           <div class="result-item">
             <div class="label">Piso</div>
             <div class="value">${piso}</div>
@@ -1163,7 +1217,7 @@
             <div class="value">${aula}</div>
           </div>
         </div>
-        <div class="map-section">
+        <div class="map-section reveal" style="animation-delay:190ms">
           <p class="map-title">🗺️ Cómo llegar</p>
           <ul class="map-steps">
             <li>🚶 Salí de UADE Labs y cruzá el Patio Central en diagonal.</li>
