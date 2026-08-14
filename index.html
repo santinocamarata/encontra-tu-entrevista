@@ -736,6 +736,33 @@
     transform: translate(-50%, -100%) scale(0.96);
   }
 
+  /* Cartelito "Click" pegado a cada pin, para que se entienda que son
+     tocables sin tener que explicarlo en el texto. pointer-events:none
+     para que el toque siempre caiga en el botón del pin, nunca en el
+     cartel. */
+  .map-marker-hint {
+    position: absolute;
+    transform: translate(-50%, 4px);
+    z-index: 6;
+    background: #fff;
+    color: var(--color-marker-photo);
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    animation: markerHintPulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes markerHintPulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+
   /* Se muestra/oculta por opacidad (no display) para poder animar también
      el cierre: un lightbox que solo aparece de golpe y desaparece de
      golpe se siente tosco. La salida es más sutil que la entrada
@@ -827,6 +854,7 @@
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
     .map-marker { width: 14px; height: 14px; }
+    .map-marker-hint { font-size: 7px; padding: 1px 4px; }
     .map-walker { width: 14px; height: 26px; }
   }
 
@@ -1003,7 +1031,8 @@
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
         </svg>
-      </button>`).join("")}
+      </button>
+      <span class="map-marker-hint" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);">Click</span>`).join("")}
       <div class="map-walker" aria-hidden="true">
         <svg viewBox="-8 -19 16 29" xmlns="http://www.w3.org/2000/svg">
           <circle cx="0" cy="-14" r="4" fill="black"/>
