@@ -736,36 +736,58 @@
     transform: translate(-50%, -100%) scale(0.96);
   }
 
-  /* Cartelito "Click" arriba a la derecha del pin, conectado con un
-     piquito hacia el punto rojo (mismo lenguaje visual que las otras
-     etiquetas del mapa). pointer-events:none para que el toque siempre
-     caiga en el botón del pin, nunca en el cartel. */
-  .map-marker-hint {
+  /* Miniatura de la foto real, arriba a la derecha del pin, conectada con
+     un piquito hacia el punto rojo: en vez de decir "Click" con texto,
+     mostrar un avance de la foto para que se entienda que ahí hay algo
+     para ver. También es un botón (mismo onclick que el pin) porque
+     visualmente invita a tocarla. El piquito va en el <button> exterior,
+     no en el círculo recortado, porque el overflow:hidden que redondea
+     la miniatura también recortaría el piquito si estuviera adentro. */
+  .map-marker-thumb {
     position: absolute;
-    transform: translate(8px, -190%);
+    transform: translate(6px, calc(-100% - 20px));
     z-index: 6;
-    background: #fff;
-    color: var(--color-marker-photo);
-    font-size: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    padding: 1px 5px;
-    border-radius: 999px;
-    white-space: nowrap;
-    pointer-events: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.1s ease-out;
   }
 
-  .map-marker-hint::after {
+  .map-marker-thumb:active {
+    transform: translate(6px, calc(-100% - 20px)) scale(0.94);
+  }
+
+  .map-marker-thumb::after {
     content: "";
     position: absolute;
-    left: 1px;
+    width: 7px;
+    height: 7px;
+    left: 2px;
     bottom: -2px;
-    width: 5px;
-    height: 5px;
-    background: #fff;
+    background: var(--color-marker-photo);
     transform: rotate(45deg);
+    z-index: -1;
+  }
+
+  .map-marker-thumb-inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--color-marker-photo);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+
+  .map-marker-thumb-inner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* Se muestra/oculta por opacidad (no display) para poder animar también
@@ -859,7 +881,8 @@
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
     .map-marker { width: 14px; height: 14px; }
-    .map-marker-hint { font-size: 7px; padding: 1px 4px; }
+    .map-marker-thumb { width: 20px; height: 20px; transform: translate(5px, calc(-100% - 16px)); }
+    .map-marker-thumb:active { transform: translate(5px, calc(-100% - 16px)) scale(0.94); }
     .map-walker { width: 14px; height: 26px; }
   }
 
@@ -1037,7 +1060,9 @@
           <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
         </svg>
       </button>
-      <span class="map-marker-hint" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);">Click</span>`).join("")}
+      <button type="button" class="map-marker-thumb" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
+        <span class="map-marker-thumb-inner"><img src="${p.src}" alt="" loading="lazy"/></span>
+      </button>`).join("")}
       <div class="map-walker" aria-hidden="true">
         <svg viewBox="-8 -19 16 29" xmlns="http://www.w3.org/2000/svg">
           <circle cx="0" cy="-14" r="4" fill="black"/>
