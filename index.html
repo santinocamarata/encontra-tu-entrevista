@@ -743,6 +743,15 @@
     border-right: 6px solid var(--color-marker-photo);
   }
 
+  /* Punto 4: está del lado izquierdo de la línea (no del derecho como los
+     otros tres), así que la flecha se da vuelta para señalar a la derecha. */
+  .map-marker-thumb--derecha::after {
+    left: auto;
+    right: -6px;
+    border-right: none;
+    border-left: 6px solid var(--color-marker-photo);
+  }
+
   .map-marker-thumb-inner {
     display: block;
     width: 100%;
@@ -946,10 +955,10 @@
   // coordenadas siguen el mismo sistema (x,y sobre el viewBox 831x805) que
   // el path y las etiquetas del mapa.
   const PUNTOS_FOTO = [
-    { x: 352, y: 195, src: "assets/punto-1.jpg", alt: "Salida de UADE Labs" },
-    { x: 365, y: 311, src: "assets/punto-2.jpg", alt: "Patio central" },
-    { x: 365, y: 395, src: "assets/punto-3.jpg", alt: "Camino hacia la entrada de Lima 3" },
-    { x: 312, y: 490, src: "assets/punto-4.jpg", alt: "Entrada de Lima 3" },
+    { x: 362, y: 195, src: "assets/punto-1.jpg", alt: "Salida de UADE Labs" },
+    { x: 375, y: 311, src: "assets/punto-2.jpg", alt: "Patio central" },
+    { x: 375, y: 395, src: "assets/punto-3.jpg", alt: "Camino hacia la entrada de Lima 3" },
+    { x: 312, y: 490, src: "assets/punto-4.jpg", alt: "Entrada de Lima 3", flecha: "derecha" },
   ];
 
   function abrirFoto(src, alt) {
@@ -1024,7 +1033,7 @@
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
       <div class="map-label map-label-elev" style="left:calc(330/831*100%);top:calc(518/805*100%);">Ascensor</div>
       ${PUNTOS_FOTO.map(p => `
-      <button type="button" class="map-marker-thumb" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
+      <button type="button" class="map-marker-thumb${p.flecha === "derecha" ? " map-marker-thumb--derecha" : ""}" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
         <span class="map-marker-thumb-inner"><img src="${p.src}" alt="" loading="lazy"/></span>
       </button>`).join("")}
       <div class="map-walker" aria-hidden="true">
