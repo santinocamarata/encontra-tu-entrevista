@@ -707,48 +707,18 @@
     border-left: 6px solid var(--color-success-bg);
   }
 
-  /* Pines sobre el recorrido, corridos afuera de la línea punteada (para no
-     tapar al muñequito ni el camino) pero pegados a ella: tocás uno y se
-     abre la foto real de ese tramo en un lightbox. Mismo ícono que el logo
-     de la marca, para que se lea como "acá hay una ubicación". La punta del
-     pin (abajo-centro) es el punto de anclaje. */
-  .map-marker {
-    position: absolute;
-    transform: translate(-50%, -100%);
-    width: 18px;
-    height: 18px;
-    padding: 0;
-    border: none;
-    background: none;
-    color: var(--color-marker-photo);
-    cursor: pointer;
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
-    transition: transform 0.1s ease-out;
-  }
-
-  .map-marker svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .map-marker:active {
-    transform: translate(-50%, -100%) scale(0.96);
-  }
-
-  /* Miniatura de la foto real, arriba a la derecha del pin, conectada con
-     un piquito hacia el punto rojo: en vez de decir "Click" con texto,
-     mostrar un avance de la foto para que se entienda que ahí hay algo
-     para ver. También es un botón (mismo onclick que el pin) porque
-     visualmente invita a tocarla. El piquito va en el <button> exterior,
-     no en el círculo recortado, porque el overflow:hidden que redondea
-     la miniatura también recortaría el piquito si estuviera adentro. */
+  /* Miniatura de la foto real, en el mismo lugar donde antes iba el pin
+     rojo (corridos afuera de la línea punteada, pero pegados a ella): en
+     vez de un puntito + cartel aparte, la foto ES el marcador. La
+     flechita a la izquierda señala hacia la línea/el punto exacto. El
+     botón exterior no tiene overflow:hidden (por eso la flecha no queda
+     recortada); el círculo recortado va en el <span> de adentro. */
   .map-marker-thumb {
     position: absolute;
-    transform: translate(6px, calc(-100% - 20px));
+    transform: translate(-50%, -50%);
     z-index: 6;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     padding: 0;
     border: none;
     background: none;
@@ -757,19 +727,20 @@
   }
 
   .map-marker-thumb:active {
-    transform: translate(6px, calc(-100% - 20px)) scale(0.94);
+    transform: translate(-50%, -50%) scale(0.94);
   }
 
   .map-marker-thumb::after {
     content: "";
     position: absolute;
-    width: 7px;
-    height: 7px;
-    left: 2px;
-    bottom: -2px;
-    background: var(--color-marker-photo);
-    transform: rotate(45deg);
-    z-index: -1;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 6px solid var(--color-marker-photo);
   }
 
   .map-marker-thumb-inner {
@@ -880,9 +851,7 @@
     .map-label-start .pill { font-size: 10px; padding: 4px 10px; }
     .map-label-end { font-size: 8px; padding: 2px 6px; }
     .map-label-elev { font-size: 8px; padding: 2px 6px; }
-    .map-marker { width: 14px; height: 14px; }
-    .map-marker-thumb { width: 20px; height: 20px; transform: translate(5px, calc(-100% - 16px)); }
-    .map-marker-thumb:active { transform: translate(5px, calc(-100% - 16px)) scale(0.94); }
+    .map-marker-thumb { width: 21px; height: 21px; }
     .map-walker { width: 14px; height: 26px; }
   }
 
@@ -1055,11 +1024,6 @@
       <div class="map-label map-label-end" style="left:calc(330/831*100%);top:calc(493/805*100%);">Entrada Lima 3</div>
       <div class="map-label map-label-elev" style="left:calc(330/831*100%);top:calc(518/805*100%);">Ascensor</div>
       ${PUNTOS_FOTO.map(p => `
-      <button type="button" class="map-marker" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.3 11.76a1 1 0 0 0 1.4 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" fill="currentColor"/>
-        </svg>
-      </button>
       <button type="button" class="map-marker-thumb" style="left:calc(${p.x}/831*100%);top:calc(${p.y}/805*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
         <span class="map-marker-thumb-inner"><img src="${p.src}" alt="" loading="lazy"/></span>
       </button>`).join("")}
