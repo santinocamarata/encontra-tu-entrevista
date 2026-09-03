@@ -460,21 +460,25 @@
   }
 
   /* La foto del mapa (831x803) tiene un margen de calle/vereda alrededor
-     del edificio. Se recorta por CSS (no se toca el archivo): el wrap toma
-     la proporción del recuadro [45,12]-[793,798] y la imagen se agranda y
-     desplaza adentro para que ese recuadro llene todo el wrap. El recuadro
-     es más alto que ancho (748x786) a propósito -para que el mapa ocupe
-     más espacio vertical en pantalla- e incluye una franja corta de calle
-     arriba/abajo (los carteles "Salta" y "Lima" completos) y una tira
-     angosta de vereda a los costados (sin el texto "Av. Independencia" /
-     "Chile", que no entra en un margen tan corto). Todo lo que se
-     posiciona en porcentaje sobre el wrap (pines, muñeco, etiquetas) usa
-     la MISMA fórmula ((x-45)/748, (y-12)/786) para seguir coincidiendo con
-     el punto real de la foto. */
+     del edificio, más una franja blanca interna (el fondo del recuadro
+     redondeado) entre esa vereda y los edificios en sí. Se recorta por CSS
+     (no se toca el archivo): el wrap toma la proporción del recuadro
+     [112,12]-[750,798] y la imagen se agranda y desplaza adentro para que
+     ese recuadro llene todo el wrap. El recuadro deja afuera casi toda la
+     franja blanca de los costados (izquierda y derecha, pegado al borde
+     de las flechas LABS/CH2) para que el patio y los edificios se vean
+     más grandes en pantalla; arriba/abajo conserva el margen que muestra
+     "Salta" y "Lima" completos. El ícono "P" de estacionamiento (que
+     vivía en esa franja blanca izquierda, entre x=66 y x=108) queda
+     afuera del recorte -deliberado: no es parte del recorrido a pie, y
+     mostrarlo cortado a la mitad se veía peor que sacarlo entero-. Todo lo
+     que se posiciona en porcentaje sobre el wrap (pines, muñeco,
+     etiquetas) usa la MISMA fórmula ((x-112)/638, (y-12)/786) para seguir
+     coincidiendo con el punto real de la foto. */
   .map-photo-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 748 / 786;
+    aspect-ratio: 638 / 786;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 12px;
@@ -484,9 +488,9 @@
   .map-photo {
     position: absolute;
     display: block;
-    width: calc(831 / 748 * 100%);
+    width: calc(831 / 638 * 100%);
     height: auto;
-    left: calc(-45 / 748 * 100%);
+    left: calc(-112 / 638 * 100%);
     top: calc(-12 / 786 * 100%);
     max-width: none;
   }
@@ -559,7 +563,7 @@
      según la proporción del recuadro", igual que haría object-fit:contain. */
   .map-photo-wrap.map-fullscreen {
     display: block;
-    width: min(calc(100vw - 32px), calc((100vh - 32px) * 748 / 786));
+    width: min(calc(100vw - 32px), calc((100vh - 32px) * 638 / 786));
     margin: 0;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -571,7 +575,7 @@
     }
 
     .map-photo-wrap.map-fullscreen {
-      width: min(calc(100vw - 16px), calc((100vh - 16px) * 748 / 786));
+      width: min(calc(100vw - 16px), calc((100vh - 16px) * 638 / 786));
     }
   }
 
@@ -612,10 +616,10 @@
   }
 
   @keyframes mapWalkerMove {
-    0%     { left: calc((308 - 45) / 748 * 100%); top: calc((168 - 12) / 786 * 100%); }
-    16.3%  { left: calc((345 - 45) / 748 * 100%); top: calc((210 - 12) / 786 * 100%); }
-    92%    { left: calc((345 - 45) / 748 * 100%); top: calc((470 - 12) / 786 * 100%); }
-    100%   { left: calc((330 - 45) / 748 * 100%); top: calc((493 - 12) / 786 * 100%); }
+    0%     { left: calc((308 - 112) / 638 * 100%); top: calc((168 - 12) / 786 * 100%); }
+    16.3%  { left: calc((345 - 112) / 638 * 100%); top: calc((210 - 12) / 786 * 100%); }
+    92%    { left: calc((345 - 112) / 638 * 100%); top: calc((470 - 12) / 786 * 100%); }
+    100%   { left: calc((330 - 112) / 638 * 100%); top: calc((493 - 12) / 786 * 100%); }
   }
 
   .map-pulse {
@@ -1023,7 +1027,7 @@
         </svg>
       </button>
       <img src="assets/mapa-campus.jpg" alt="Mapa del campus UADE" class="map-photo"/>
-      <svg class="map-overlay" viewBox="45 12 748 786" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="map-overlay" viewBox="112 12 638 786" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M 308 168 L 345 210 L 345 470 L 330 493 L 330 553 L 256 553" fill="none" stroke="var(--color-primary-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 18"/>
         <polygon points="256,553 272,543 272,562" fill="var(--color-primary-dark)"/>
         <circle cx="330" cy="493" r="7" fill="white" stroke="var(--color-primary-dark)" stroke-width="2.5"/>
@@ -1031,14 +1035,14 @@
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)"/>
         <circle cx="308" cy="168" r="9" fill="var(--color-primary-dark)" class="map-pulse"/>
       </svg>
-      <div class="map-label map-label-start" style="left:calc((308 - 45)/748*100%);top:calc((168 - 12)/786*100%);">
+      <div class="map-label map-label-start" style="left:calc((308 - 112)/638*100%);top:calc((168 - 12)/786*100%);">
         <div class="pill">Estás acá</div>
         <div class="pico"></div>
       </div>
-      <div class="map-label map-label-end" style="left:calc((330 - 45)/748*100%);top:calc((493 - 12)/786*100%);">Entrada Lima 3</div>
-      <div class="map-label map-label-elev" style="left:calc((330 - 45)/748*100%);top:calc((518 - 12)/786*100%);">Ascensor</div>
+      <div class="map-label map-label-end" style="left:calc((330 - 112)/638*100%);top:calc((493 - 12)/786*100%);">Entrada Lima 3</div>
+      <div class="map-label map-label-elev" style="left:calc((330 - 112)/638*100%);top:calc((518 - 12)/786*100%);">Ascensor</div>
       ${PUNTOS_FOTO.map(p => `
-      <button type="button" class="map-marker-thumb${p.flecha === "derecha" ? " map-marker-thumb--derecha" : ""}" style="left:calc((${p.x} - 45)/748*100%);top:calc((${p.y} - 12)/786*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
+      <button type="button" class="map-marker-thumb${p.flecha === "derecha" ? " map-marker-thumb--derecha" : ""}" style="left:calc((${p.x} - 112)/638*100%);top:calc((${p.y} - 12)/786*100%);" onclick="abrirFoto('${p.src}', '${p.alt}')" aria-label="Ver foto: ${p.alt}">
         <span class="map-marker-thumb-inner"><img src="${p.src}" alt="" loading="lazy"/></span>
       </button>`).join("")}
       <div class="map-walker" aria-hidden="true">
