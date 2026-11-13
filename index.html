@@ -469,6 +469,26 @@
     color: var(--color-text);
   }
 
+  /* Sin mapa (clase sin-mapa en .result-box), edificio y piso son el dato
+     principal y van más grandes. */
+  .app .result-box.sin-mapa .result-edificio {
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+
+  .app .result-box.sin-mapa .result-item {
+    padding: 22px 10px;
+  }
+
+  .app .result-box.sin-mapa .result-item .label {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .app .result-box.sin-mapa .result-item .value {
+    font-size: clamp(34px, 11vw, 48px);
+  }
+
   /* Sin mapa la sección no necesita ser una tarjeta blanca a sangre: queda
      como un bloque simple dentro del cuadro de resultado. */
   .app .map-section.map-section--solo,
@@ -1270,7 +1290,7 @@
     // alumno ve una sola vez por consulta, el orden de aparición ayuda a
     // guiar la lectura de "qué pasó" a "cómo llego".
     resultadoDiv.innerHTML = `
-      <div class="result-box success">
+      <div class="result-box success${MOSTRAR_MAPA ? "" : " sin-mapa"}">
         <div class="result-header reveal" style="animation-delay:0ms">
           <span class="check">&#10003;</span>
           Aula asignada
