@@ -1235,6 +1235,10 @@
       `
       : "";
 
+    // Mapa escondido temporalmente (esta tanda es en UADE Labs): poner en true
+    // para volver a mostrar el mapa con el recorrido a Lima 3.
+    const MOSTRAR_MAPA = false;
+
     // El resultado entra en cascada (header → nombre → edificio → piso/aula
     // → mapa) en vez de un solo fade parejo: como es una pantalla que el
     // alumno ve una sola vez por consulta, el orden de aparición ayuda a
@@ -1246,13 +1250,14 @@
           Aula asignada
         </div>
         ${bloqueNombre}
-        <div class="result-edificio reveal" style="animation-delay:100ms">Edificio: <strong>LIMA 3</strong></div>
+        <div class="result-edificio reveal" style="animation-delay:100ms">Edificio: <strong>UADE LABS</strong></div>
         <div class="result-grid reveal" style="animation-delay:140ms">
           <div class="result-item">
             <div class="label">Piso</div>
             <div class="value">${piso}</div>
           </div>
         </div>
+        ${MOSTRAR_MAPA ? `
         <div class="map-section reveal" style="animation-delay:190ms">
           <p class="map-title">🗺️ Cómo llegar</p>
           <ul class="map-steps">
@@ -1261,7 +1266,13 @@
             <li>⬆️ Subí al ${piso}. Una vez allí, vas a encontrar el aula.</li>
           </ul>
           ${MAPA_HTML}
-        </div>
+        </div>` : `
+        <div class="map-section reveal" style="animation-delay:190ms">
+          <ul class="map-steps">
+            <li>🚪 Ingresá a UADE Labs.</li>
+            <li>⬆️ Subí al ${piso}. Una vez allí, vas a encontrar el aula.</li>
+          </ul>
+        </div>`}
       </div>
     `;
   }
