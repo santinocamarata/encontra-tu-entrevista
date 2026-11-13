@@ -459,6 +459,32 @@
     margin-bottom: 0;
   }
 
+  /* Pasos sin mapa (MOSTRAR_MAPA = false): son lo único de la sección, así
+     que van más grandes. El prefijo .app.compact gana contra el 10px/11px
+     de arriba. */
+  .app .map-steps.map-steps--solo,
+  .app.compact .map-steps.map-steps--solo {
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--color-text);
+  }
+
+  /* Sin mapa la sección no necesita ser una tarjeta blanca a sangre: queda
+     como un bloque simple dentro del cuadro de resultado. */
+  .app .map-section.map-section--solo,
+  .app.compact .map-section.map-section--solo {
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 6px 2px 2px;
+  }
+
+  .app .map-steps.map-steps--solo li,
+  .app.compact .map-steps.map-steps--solo li {
+    margin-bottom: 10px;
+  }
+
   /* La foto del mapa (831x803) tiene un margen de calle/vereda alrededor
      del edificio, más una franja blanca interna (el fondo del recuadro
      redondeado) entre esa vereda y los edificios en sí. Se recorta por CSS
@@ -1267,8 +1293,8 @@
           </ul>
           ${MAPA_HTML}
         </div>` : `
-        <div class="map-section reveal" style="animation-delay:190ms">
-          <ul class="map-steps">
+        <div class="map-section map-section--solo reveal" style="animation-delay:190ms">
+          <ul class="map-steps map-steps--solo">
             <li>🚪 Ingresá a UADE Labs.</li>
             <li>⬆️ Subí al ${piso}. Una vez allí, vas a encontrar el aula.</li>
           </ul>
