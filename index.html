@@ -1251,8 +1251,12 @@
     resultadoDiv.innerHTML = `<div class="result-box loading">Buscando tu aula...</div>`;
   }
 
+  // Piso fijo para esta tanda: todos van al 2° piso sin importar el aula.
+  // Poner en null para volver a sacar el piso del primer dígito del aula.
+  const PISO_FIJO = 2;
+
   function formatearPiso(aula) {
-    return `${aula.charAt(0)}° piso`;
+    return `${PISO_FIJO ?? aula.charAt(0)}° piso`;
   }
 
   function escapeHtml(texto) {
@@ -1281,9 +1285,11 @@
       `
       : "";
 
-    // Mapa escondido temporalmente (esta tanda es en UADE Labs): poner en true
-    // para volver a mostrar el mapa con el recorrido a Lima 3.
-    const MOSTRAR_MAPA = false;
+    // Con true se muestra el mapa con el recorrido a Lima 3 (edificio LIMA 3).
+    // Con false el mapa queda escondido y el edificio pasa a UADE LABS (así
+    // fue la tanda anterior); el mapa y su código siguen intactos.
+    const MOSTRAR_MAPA = true;
+    const EDIFICIO = MOSTRAR_MAPA ? "LIMA 3" : "UADE LABS";
 
     // El resultado entra en cascada (header → nombre → edificio → piso/aula
     // → mapa) en vez de un solo fade parejo: como es una pantalla que el
@@ -1296,7 +1302,7 @@
           Aula asignada
         </div>
         ${bloqueNombre}
-        <div class="result-edificio reveal" style="animation-delay:100ms">Edificio: <strong>UADE LABS</strong></div>
+        <div class="result-edificio reveal" style="animation-delay:100ms">Edificio: <strong>${EDIFICIO}</strong></div>
         <div class="result-grid reveal" style="animation-delay:140ms">
           <div class="result-item">
             <div class="label">Piso</div>
